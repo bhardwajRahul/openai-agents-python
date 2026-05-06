@@ -1186,6 +1186,21 @@ async def test_util_adds_properties():
     )
 
 
+def test_to_function_tool_does_not_mutate_mcp_input_schema():
+    schema = {"type": "object", "description": "Test tool"}
+    tool = MCPTool(name="test_tool", inputSchema=schema)
+
+    function_tool = MCPUtil.to_function_tool(tool, FakeMCPServer(), convert_schemas_to_strict=False)
+
+    assert function_tool.params_json_schema == {
+        "type": "object",
+        "description": "Test tool",
+        "properties": {},
+    }
+    assert schema == {"type": "object", "description": "Test tool"}
+    assert tool.inputSchema == {"type": "object", "description": "Test tool"}
+
+
 class StructuredContentTestServer(FakeMCPServer):
     """Test server that allows setting both content and structured content for testing."""
 

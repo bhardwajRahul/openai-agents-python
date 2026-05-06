@@ -286,7 +286,7 @@ class MCPUtil:
         effective_failure_error_function = server._get_failure_error_function(
             failure_error_function
         )
-        schema, is_strict = tool.inputSchema, False
+        schema, is_strict = copy.deepcopy(tool.inputSchema), False
 
         # MCP spec doesn't require the inputSchema to have `properties`, but OpenAI spec does.
         if "properties" not in schema:
