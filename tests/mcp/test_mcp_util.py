@@ -306,6 +306,21 @@ async def test_mcp_invoke_bad_json_includes_payload_when_tool_logging_enabled(
     assert "SECRET_TOKEN_123" in caplog.text
 
 
+@pytest.mark.asyncio
+@pytest.mark.parametrize("input_json", ["[]", '"value"', "123", "null"])
+async def test_mcp_invoke_rejects_non_object_json_input(input_json: str):
+    server = FakeMCPServer()
+    server.add_tool("test_tool_1", {})
+
+    ctx = RunContextWrapper(context=None)
+    tool = MCPTool(name="test_tool_1", inputSchema={})
+
+    with pytest.raises(ModelBehaviorError, match="expected a JSON object"):
+        await MCPUtil.invoke_mcp_tool(server, tool, ctx, input_json)
+
+    assert server.tool_calls == []
+
+
 class CrashingFakeMCPServer(FakeMCPServer):
     async def call_tool(
         self,
