@@ -223,10 +223,11 @@ class MCPUtil:
                 failure_error_function=failure_error_function,
             )
             server_tool_names = {tool.name for tool in server_tools}
-            if len(server_tool_names & tool_names) > 0:
+            duplicate_tool_names = sorted(server_tool_names & tool_names)
+            if duplicate_tool_names:
                 raise UserError(
-                    f"Duplicate tool names found across MCP servers: "
-                    f"{server_tool_names & tool_names}"
+                    "Duplicate tool names found across MCP servers: "
+                    f"{', '.join(duplicate_tool_names)}"
                 )
             tool_names.update(server_tool_names)
             tools.extend(server_tools)
