@@ -221,7 +221,11 @@ class OpenAIChatCompletionsModel(Model):
                 provider_data["response_id"] = response.id
 
             items = (
-                Converter.message_to_output_items(message, provider_data=provider_data)
+                Converter.message_to_output_items(
+                    message,
+                    provider_data=provider_data,
+                    strict_feature_validation=self._strict_feature_validation,
+                )
                 if message is not None
                 else []
             )

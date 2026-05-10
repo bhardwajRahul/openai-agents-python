@@ -67,6 +67,7 @@ class StreamingState:
     function_calls: dict[int, ResponseFunctionToolCall] = field(default_factory=dict)
     # Fields for real-time function call streaming
     function_call_streaming: dict[int, bool] = field(default_factory=dict)
+    ignored_tool_call_indexes: set[int] = field(default_factory=set)
     # Store accumulated thinking text and signature for Anthropic compatibility
     thinking_text: str = ""
     thinking_signature: str | None = None
@@ -585,6 +586,18 @@ class ChatCmplStreamHandler:
             # Handle tool calls with real-time streaming support
             if delta.tool_calls:
                 for tc_delta in delta.tool_calls:
+                    if tc_delta.index in state.ignored_tool_call_indexes:
+                        continue
+
+                    if getattr(tc_delta, "type", None) == "custom":
+                        if strict_feature_validation:
+                            raise UserError(
+                                "Custom tool calls are not supported by the Chat Completions "
+                                "converter"
+                            )
+                        state.ignored_tool_call_indexes.add(tc_delta.index)
+                        continue
+
                     if tc_delta.index not in state.function_calls:
                         state.function_calls[tc_delta.index] = ResponseFunctionToolCall(
                             id=FAKE_RESPONSES_ID,
