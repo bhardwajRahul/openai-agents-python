@@ -38,7 +38,7 @@ Important guidance:
 - A secondary `feature:*` label needs two things: a non-test implementation/docs change in that area, and evidence that the area is a user-facing outcome of the PR rather than support work for another feature.
 
 Label rules:
-- documentation: Documentation changes (docs/), or src/ changes that only modify comments/docstrings without behavior changes. If only comments/docstrings change in src/, do not add enhancement.
+- documentation: Documentation changes (docs/), example code changes (examples/), or src/ changes that only modify comments/docstrings without behavior changes. If only comments/docstrings change in src/, do not add enhancement.
 - project: Any change to pyproject.toml.
 - dependencies: Dependencies are added/removed/updated (pyproject.toml dependency sections or uv.lock changes).
 - enhancement: The PR's primary intent is to add or expand functionality. Prefer `enhancement` for feature work even if the diff also contains some fixes or guardrails needed to support that feature.

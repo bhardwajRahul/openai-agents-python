@@ -102,6 +102,21 @@ def test_compute_desired_labels_falls_back_when_codex_output_is_invalid() -> Non
     assert desired == {"feature:core"}
 
 
+def test_compute_desired_labels_marks_examples_as_documentation() -> None:
+    desired = pr_labels.compute_desired_labels(
+        pr_context=pr_labels.PRContext(),
+        changed_files=["examples/basic/hello_world.py"],
+        diff_text="",
+        codex_ran=True,
+        codex_output_valid=True,
+        codex_labels=[],
+        base_sha=None,
+        head_sha=None,
+    )
+
+    assert desired == {"documentation"}
+
+
 def test_compute_desired_labels_uses_fallback_feature_labels_when_codex_valid_but_empty() -> None:
     desired = pr_labels.compute_desired_labels(
         pr_context=pr_labels.PRContext(),

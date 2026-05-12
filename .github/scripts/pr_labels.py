@@ -306,7 +306,7 @@ def compute_desired_labels(
     if "pyproject.toml" in changed_files:
         desired.add("project")
 
-    if any(path.startswith("docs/") for path in changed_files):
+    if any(path.startswith(("docs/", "examples/")) for path in changed_files):
         desired.add("documentation")
 
     dependencies_allowed = "uv.lock" in changed_files
